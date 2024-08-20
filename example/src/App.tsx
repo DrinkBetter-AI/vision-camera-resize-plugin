@@ -6,7 +6,10 @@ import {
   useCameraPermission,
   useFrameProcessor,
 } from 'react-native-vision-camera';
-import { Options, useResizePlugin } from 'vision-camera-resize-plugin';
+import {
+  Options,
+  useFrameTransformPlugin,
+} from 'vision-camera-transform-plugin';
 import { useSharedValue } from 'react-native-reanimated';
 import {
   Skia,
@@ -34,7 +37,7 @@ export default function App() {
     permission.requestPermission();
   }, [permission]);
 
-  const plugin = useResizePlugin();
+  const { resize } = useFrameTransformPlugin();
 
   const updatePreviewImageFromData = useRunOnJS(
     (data: SkData, pixelFormat: PixelFormat) => {
@@ -51,7 +54,7 @@ export default function App() {
 
       const start = performance.now();
 
-      const result = plugin.resize(frame, {
+      const result = resize(frame, {
         scale: {
           width: WIDTH,
           height: HEIGHT,

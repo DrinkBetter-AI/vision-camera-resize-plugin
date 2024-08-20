@@ -1,4 +1,4 @@
-package com.visioncameraresizeplugin
+package com.VisionCameraTransformPlugin
 
 import android.graphics.ImageFormat
 import android.graphics.PixelFormat as AndroidPixelFormat
@@ -23,7 +23,7 @@ class ResizePlugin(private val proxy: VisionCameraProxy) : FrameProcessorPlugin(
     private const val TAG = "ResizePlugin"
 
     init {
-      System.loadLibrary("VisionCameraResizePlugin")
+      System.loadLibrary("VisionCameraTransformPlugin")
     }
   }
 

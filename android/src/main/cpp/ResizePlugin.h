@@ -39,7 +39,7 @@ struct FrameBuffer {
 
 struct ResizePlugin : public HybridClass<ResizePlugin> {
 public:
-  static auto constexpr kJavaDescriptor = "Lcom/visioncameraresizeplugin/ResizePlugin;";
+  static auto constexpr kJavaDescriptor = "Lcom/VisionCameraTransformPlugin/ResizePlugin;";
   static void registerNatives();
 
 private:

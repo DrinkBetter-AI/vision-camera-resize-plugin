@@ -1,5 +1,5 @@
 {
-  "name": "vision-camera-resize-plugin",
+  "name": "vision-camera-transform-plugin",
   "version": "3.1.0",
   "description": "A VisionCamera Frame Processor Plugin for fast and efficient Frame resizing, cropping and pixelformat conversion",
   "main": "lib/commonjs/index",
@@ -44,14 +44,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrousavy/vision-camera-resize-plugin.git"
+    "url": "git+https://github.com/mrousavy/vision-camera-transform-plugin.git"
   },
   "author": "Marc Rousavy <me@mrousavy.com> (https://github.com/mrousavy)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mrousavy/vision-camera-resize-plugin/issues"
+    "url": "https://github.com/mrousavy/vision-camera-transform-plugin/issues"
   },
-  "homepage": "https://github.com/mrousavy/vision-camera-resize-plugin#readme",
+  "homepage": "https://github.com/mrousavy/vision-camera-transform-plugin#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -149,7 +149,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "RNVisionCameraResizePluginSpec",
+    "name": "RNVisionCameraTransformPluginSpec",
     "type": "modules",
     "jsSrcsDir": "src"
   },

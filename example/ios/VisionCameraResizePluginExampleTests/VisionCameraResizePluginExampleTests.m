@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface VisionCameraResizePluginExampleTests : XCTestCase
+@interface VisionCameraTransformPluginExampleTests : XCTestCase
 
 @end
 
-@implementation VisionCameraResizePluginExampleTests
+@implementation VisionCameraTransformPluginExampleTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

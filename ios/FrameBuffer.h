@@ -1,6 +1,6 @@
 //
 //  FrameBuffer.h
-//  VisionCameraResizePlugin
+//  VisionCameraTransformPlugin
 //
 //  Created by Marc Rousavy on 24.01.24.
 //  Copyright © 2023 Facebook. All rights reserved.

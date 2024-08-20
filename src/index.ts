@@ -9,13 +9,7 @@ export type OutputArray<T extends DataType> = T extends 'uint8'
     : never;
 
 interface Size {
-  /**
-   * The width to resize the Frame to.
-   */
   width: number;
-  /**
-   * The height to resize the Frame to.
-   */
   height: number;
 }
 
@@ -72,31 +66,32 @@ export interface Options<T extends DataType> {
 }
 
 /**
- * An instance of the resize plugin.
+ * An instance of the transform plugin.
  *
- * All temporary memory buffers allocated by the resize plugin
+ * All temporary memory buffers allocated by the transform plugin
  * will be deleted once this value goes out of scope.
  */
-export interface ResizePlugin {
+export interface TransformPlugin {
   /**
-   * Resizes the given Frame to the target width/height and
+   * Transforms the given Frame to the target width/height and
    * convert it to the given pixel format.
    */
   resize<T extends DataType>(frame: Frame, options: Options<T>): OutputArray<T>;
 }
 
 /**
- * Get a new instance of the resize plugin.
+ * Get a new instance of the transform plugin.
  *
- * All temporary memory buffers allocated by the resize plugin
+ * All temporary memory buffers allocated by the transform plugin
  * will be deleted once the returned value goes out of scope.
  */
-export function createResizePlugin(): ResizePlugin {
-  const resizePlugin = VisionCameraProxy.initFrameProcessorPlugin('resize');
+export function createTransformPlugin(): TransformPlugin {
+  const transformPlugin =
+    VisionCameraProxy.initFrameProcessorPlugin('transform');
 
-  if (resizePlugin == null) {
+  if (transformPlugin == null) {
     throw new Error(
-      'Cannot find vision-camera-resize-plugin! Did you install the native dependency properly?'
+      'Cannot find vision-camera-transform-plugin! Did you install the native dependency properly?'
     );
   }
 
@@ -107,7 +102,7 @@ export function createResizePlugin(): ResizePlugin {
     ): OutputArray<T> => {
       'worklet';
       // @ts-expect-error
-      const arrayBuffer = resizePlugin.call(frame, options) as ArrayBuffer;
+      const arrayBuffer = transformPlugin.call(frame, options) as ArrayBuffer;
 
       switch (options.dataType) {
         case 'uint8':
@@ -124,11 +119,11 @@ export function createResizePlugin(): ResizePlugin {
 }
 
 /**
- * Use an instance of the resize plugin.
+ * Use an instance of the transform plugin.
  *
- * All temporary memory buffers allocated by the resize plugin
- * will be deleted once the component that uses `useResizePlugin()` unmounts.
+ * All temporary memory buffers allocated by the transform plugin
+ * will be deleted once the component that uses `useFrameTransformPlugin()` unmounts.
  */
-export function useResizePlugin(): ResizePlugin {
-  return useMemo(() => createResizePlugin(), []);
+export function useFrameTransformPlugin(): TransformPlugin {
+  return useMemo(() => createTransformPlugin(), []);
 }

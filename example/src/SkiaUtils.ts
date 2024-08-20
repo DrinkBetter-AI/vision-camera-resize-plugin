@@ -5,7 +5,7 @@ import {
   Skia,
   SkImage,
 } from '@shopify/react-native-skia';
-import { Options } from 'vision-camera-resize-plugin';
+import { Options } from 'vision-camera-transform-plugin';
 
 type PixelFormat = Options<'uint8'>['pixelFormat'];
 

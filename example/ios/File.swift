@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  VisionCameraResizePluginExample
+//  VisionCameraTransformPluginExample
 //
 
 import Foundation

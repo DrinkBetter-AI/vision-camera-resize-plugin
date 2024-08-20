@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.visioncameraresizepluginexample"
+    namespace "com.VisionCameraTransformPluginexample"
     defaultConfig {
-        applicationId "com.visioncameraresizepluginexample"
+        applicationId "com.VisionCameraTransformPluginexample"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

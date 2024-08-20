@@ -1,4 +1,4 @@
-package com.visioncameraresizepluginexample
+package com.VisionCameraTransformPluginexample
 
 import android.app.Application
 import com.facebook.react.PackageList

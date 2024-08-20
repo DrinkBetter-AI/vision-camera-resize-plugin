@@ -1,6 +1,6 @@
 //
 //  ResizePlugin.mm
-//  VisionCameraResizePlugin
+//  VisionCameraTransformPlugin
 //
 //  Created by Marc Rousavy on 23.09.23.
 //  Copyright © 2023 Facebook. All rights reserved.

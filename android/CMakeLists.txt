@@ -1,7 +1,7 @@
-project(VisionCameraResizePlugin)
+project(VisionCameraTransformPlugin)
 cmake_minimum_required(VERSION 3.9.0)
 
-set (PACKAGE_NAME "VisionCameraResizePlugin")
+set (PACKAGE_NAME "VisionCameraTransformPlugin")
 set (BUILD_DIR ${CMAKE_SOURCE_DIR}/build)
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_CXX_STANDARD 17)
@@ -17,7 +17,7 @@ add_library(${PACKAGE_NAME}            SHARED
             src/main/cpp/ResizePlugin.cpp
             src/main/cpp/JImage.cpp
             src/main/cpp/JImagePlane.cpp
-            src/main/cpp/VisionCameraResizePlugin.cpp
+            src/main/cpp/VisionCameraTransformPlugin.cpp
 )
 
 # Specifies a path to native header files.

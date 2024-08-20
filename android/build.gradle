@@ -2,7 +2,7 @@ import java.nio.file.Paths
 
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["VisionCameraResizePlugin_kotlinVersion"]
+  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["VisionCameraTransformPlugin_kotlinVersion"]
 
   repositories {
     google()
@@ -33,11 +33,11 @@ if (isNewArchitectureEnabled()) {
 }
 
 def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["VisionCameraResizePlugin_" + name]
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["VisionCameraTransformPlugin_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["VisionCameraResizePlugin_" + name]).toInteger()
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["VisionCameraTransformPlugin_" + name]).toInteger()
 }
 
 def supportsNamespace() {
@@ -51,7 +51,7 @@ def supportsNamespace() {
 
 android {
   if (supportsNamespace()) {
-    namespace "com.visioncameraresizeplugin"
+    namespace "com.VisionCameraTransformPlugin"
 
     sourceSets {
       main {
