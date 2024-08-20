@@ -2,7 +2,7 @@
 // Created by Marc Rousavy on 25.01.24
 //
 
-#include "ResizePlugin.h"
+#include "TransformPlugin.h"
 #include "libyuv.h"
 #include <android/log.h>
 #include <fbjni/fbjni.h>
@@ -13,14 +13,14 @@ namespace vision {
 
 using namespace facebook;
 
-void ResizePlugin::registerNatives() {
+void TransformPlugin::registerNatives() {
   registerHybrid({
-      makeNativeMethod("initHybrid", ResizePlugin::initHybrid),
-      makeNativeMethod("resize", ResizePlugin::resize),
+      makeNativeMethod("initHybrid", TransformPlugin::initHybrid),
+      makeNativeMethod("transform", TransformPlugin::resize),
   });
 }
 
-ResizePlugin::ResizePlugin(const jni::alias_ref<jhybridobject>& javaThis) {
+TransformPlugin::TransformPlugin(const jni::alias_ref<jhybridobject>& javaThis) {
   _javaThis = jni::make_global(javaThis);
 }
 
@@ -72,14 +72,14 @@ uint8_t* FrameBuffer::data() const {
   return buffer->getDirectBytes();
 }
 
-global_ref<JByteBuffer> ResizePlugin::allocateBuffer(size_t size, std::string debugName) {
+global_ref<JByteBuffer> TransformPlugin::allocateBuffer(size_t size, std::string debugName) {
   __android_log_print(ANDROID_LOG_INFO, TAG, "Allocating %s Buffer with size %zu...", debugName.c_str(), size);
   local_ref<JByteBuffer> buffer = JByteBuffer::allocateDirect(size);
   buffer->order(JByteOrder::nativeOrder());
   return make_global(buffer);
 }
 
-FrameBuffer ResizePlugin::imageToFrameBuffer(alias_ref<vision::JImage> image) {
+FrameBuffer TransformPlugin::imageToFrameBuffer(alias_ref<vision::JImage> image) {
   jni::local_ref<JArrayClass<JImagePlane>> planes = image->getPlanes();
 
   int width = image->getWidth();
@@ -154,7 +154,7 @@ std::string rectToString(int x, int y, int width, int height) {
   return std::to_string(x) + ", " + std::to_string(y) + " @ " + std::to_string(width) + "x" + std::to_string(height);
 }
 
-FrameBuffer ResizePlugin::cropARGBBuffer(const FrameBuffer& frameBuffer, int x, int y, int width, int height) {
+FrameBuffer TransformPlugin::cropARGBBuffer(const FrameBuffer& frameBuffer, int x, int y, int width, int height) {
   if (width == frameBuffer.width && height == frameBuffer.height && x == 0 && y == 0) {
     // already in correct size.
     return frameBuffer;
@@ -189,7 +189,7 @@ FrameBuffer ResizePlugin::cropARGBBuffer(const FrameBuffer& frameBuffer, int x, 
   return destination;
 }
 
-FrameBuffer ResizePlugin::mirrorARGBBuffer(const FrameBuffer& frameBuffer, bool mirror) {
+FrameBuffer TransformPlugin::mirrorARGBBuffer(const FrameBuffer& frameBuffer, bool mirror) {
   if (!mirror) {
     return frameBuffer;
   }
@@ -220,7 +220,7 @@ FrameBuffer ResizePlugin::mirrorARGBBuffer(const FrameBuffer& frameBuffer, bool 
   return destination;
 }
 
-FrameBuffer ResizePlugin::rotateARGBBuffer(const FrameBuffer& frameBuffer, Rotation rotation) {
+FrameBuffer TransformPlugin::rotateARGBBuffer(const FrameBuffer& frameBuffer, Rotation rotation) {
   if (rotation == Rotation::Rotation0) {
     return frameBuffer;
   }
@@ -266,7 +266,7 @@ FrameBuffer ResizePlugin::rotateARGBBuffer(const FrameBuffer& frameBuffer, Rotat
   return destination;
 }
 
-FrameBuffer ResizePlugin::scaleARGBBuffer(const FrameBuffer& frameBuffer, int width, int height) {
+FrameBuffer TransformPlugin::scaleARGBBuffer(const FrameBuffer& frameBuffer, int width, int height) {
   if (width == frameBuffer.width && height == frameBuffer.height) {
     // already in correct size.
     return frameBuffer;
@@ -299,7 +299,7 @@ FrameBuffer ResizePlugin::scaleARGBBuffer(const FrameBuffer& frameBuffer, int wi
   return destination;
 }
 
-FrameBuffer ResizePlugin::convertARGBBufferTo(const FrameBuffer& frameBuffer, PixelFormat pixelFormat) {
+FrameBuffer TransformPlugin::convertARGBBufferTo(const FrameBuffer& frameBuffer, PixelFormat pixelFormat) {
   if (frameBuffer.pixelFormat == pixelFormat) {
     // Already in the correct format.
     return frameBuffer;
@@ -357,7 +357,7 @@ FrameBuffer ResizePlugin::convertARGBBufferTo(const FrameBuffer& frameBuffer, Pi
   return destination;
 }
 
-FrameBuffer ResizePlugin::convertBufferToDataType(const FrameBuffer& frameBuffer, DataType dataType) {
+FrameBuffer TransformPlugin::convertBufferToDataType(const FrameBuffer& frameBuffer, DataType dataType) {
   if (frameBuffer.dataType == dataType) {
     // Already in correct data-type
     return frameBuffer;
@@ -398,9 +398,9 @@ FrameBuffer ResizePlugin::convertBufferToDataType(const FrameBuffer& frameBuffer
   return destination;
 }
 
-jni::global_ref<jni::JByteBuffer> ResizePlugin::resize(jni::alias_ref<JImage> image, int cropX, int cropY, int cropWidth, int cropHeight,
-                                                       int scaleWidth, int scaleHeight, int /* Rotation */ rotationOrdinal, bool mirror,
-                                                       int /* PixelFormat */ pixelFormatOrdinal, int /* DataType */ dataTypeOrdinal) {
+jni::global_ref<jni::JByteBuffer> TransformPlugin::resize(jni::alias_ref<JImage> image, int cropX, int cropY, int cropWidth, int cropHeight,
+                                                          int scaleWidth, int scaleHeight, int /* Rotation */ rotationOrdinal, bool mirror,
+                                                          int /* PixelFormat */ pixelFormatOrdinal, int /* DataType */ dataTypeOrdinal) {
   PixelFormat pixelFormat = static_cast<PixelFormat>(pixelFormatOrdinal);
   DataType dataType = static_cast<DataType>(dataTypeOrdinal);
   Rotation rotation = static_cast<Rotation>(rotationOrdinal);
@@ -429,7 +429,7 @@ jni::global_ref<jni::JByteBuffer> ResizePlugin::resize(jni::alias_ref<JImage> im
   return result.buffer;
 }
 
-jni::local_ref<ResizePlugin::jhybriddata> ResizePlugin::initHybrid(jni::alias_ref<jhybridobject> javaThis) {
+jni::local_ref<TransformPlugin::jhybriddata> TransformPlugin::initHybrid(jni::alias_ref<jhybridobject> javaThis) {
   return makeCxxInstance(javaThis);
 }
 

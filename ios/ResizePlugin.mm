@@ -1,5 +1,5 @@
 //
-//  ResizePlugin.mm
+//  TransformPlugin.mm
 //  VisionCameraTransformPlugin
 //
 //  Created by Marc Rousavy on 23.09.23.
@@ -19,12 +19,12 @@
 
 typedef NS_ENUM(NSInteger, Rotation) { Rotation0 = 0, Rotation90 = 90, Rotation180 = 180, Rotation270 = 270 };
 
-@interface ResizePlugin : FrameProcessorPlugin
+@interface TransformPlugin : FrameProcessorPlugin
 @end
 
 #define AdvancePtr(_ptr, _bytes) (__typeof__(_ptr))((uintptr_t)(_ptr) + (size_t)(_bytes))
 
-@implementation ResizePlugin {
+@implementation TransformPlugin {
   // 1. ??? (?x?) -> ARGB (?x?)
   FrameBuffer* _argbBuffer;
   // 2. ARGB (?x?) -> ARGB (!x!)
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, Rotation) { Rotation0 = 0, Rotation90 = 90, Rotation1
 }
 
 - (void)dealloc {
-  NSLog(@"Deallocating ResizePlugin...");
+  NSLog(@"Deallocating TransformPlugin...");
   free(_tempResizeBuffer);
 }
 
@@ -499,19 +499,19 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   if (scale != nil) {
     scaleWidth = ((NSNumber*)scale[@"width"]).doubleValue;
     scaleHeight = ((NSNumber*)scale[@"height"]).doubleValue;
-    NSLog(@"ResizePlugin: Scaling to %f x %f.", scaleWidth, scaleHeight);
+    NSLog(@"TransformPlugin: Scaling to %f x %f.", scaleWidth, scaleHeight);
   } else {
-    NSLog(@"ResizePlugin: No custom scale supplied.");
+    NSLog(@"TransformPlugin: No custom scale supplied.");
   }
 
   NSString* rotationString = arguments[@"rotation"];
   Rotation rotation;
   if (rotationString != nil) {
     rotation = parseRotation(rotationString);
-    NSLog(@"ResizePlugin: Rotation: %ld", (long)rotation);
+    NSLog(@"TransformPlugin: Rotation: %ld", (long)rotation);
   } else {
     rotation = Rotation0;
-    NSLog(@"ResizePlugin: Rotation not specified, defaulting to: %ld", (long)rotation);
+    NSLog(@"TransformPlugin: Rotation not specified, defaulting to: %ld", (long)rotation);
   }
 
   NSNumber* mirrorParam = arguments[@"mirror"];
@@ -519,7 +519,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   if (mirrorParam != nil) {
     mirror = [mirrorParam boolValue];
   }
-  NSLog(@"ResizePlugin: Mirror: %@", mirror ? @"YES" : @"NO");
+  NSLog(@"TransformPlugin: Mirror: %@", mirror ? @"YES" : @"NO");
 
   double cropWidth = (double)frame.width;
   double cropHeight = (double)frame.height;
@@ -531,7 +531,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
     cropHeight = ((NSNumber*)crop[@"height"]).doubleValue;
     cropX = ((NSNumber*)crop[@"x"]).doubleValue;
     cropY = ((NSNumber*)crop[@"y"]).doubleValue;
-    NSLog(@"ResizePlugin: Cropping to %f x %f, at (%f, %f)", cropWidth, cropHeight, cropX, cropY);
+    NSLog(@"TransformPlugin: Cropping to %f x %f, at (%f, %f)", cropWidth, cropHeight, cropX, cropY);
   } else {
     if (scale != nil) {
       double aspectRatio = (double)frame.width / (double)frame.height;
@@ -548,9 +548,9 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
       }
       cropX = (frame.width / 2) - (cropWidth / 2);
       cropY = (frame.height / 2) - (cropHeight / 2);
-      NSLog(@"ResizePlugin: Cropping to %f x %f at (%f, %f).", cropWidth, cropHeight, cropX, cropY);
+      NSLog(@"TransformPlugin: Cropping to %f x %f at (%f, %f).", cropWidth, cropHeight, cropX, cropY);
     } else {
-      NSLog(@"ResizePlugin: Both scale and crop are nil, using Frame's original dimensions.");
+      NSLog(@"TransformPlugin: Both scale and crop are nil, using Frame's original dimensions.");
     }
   }
 
@@ -558,18 +558,18 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   NSString* pixelFormatString = arguments[@"pixelFormat"];
   if (pixelFormatString != nil) {
     pixelFormat = parsePixelFormat(pixelFormatString);
-    NSLog(@"ResizePlugin: Using target format: %@", pixelFormatString);
+    NSLog(@"TransformPlugin: Using target format: %@", pixelFormatString);
   } else {
-    NSLog(@"ResizePlugin: No custom target format supplied.");
+    NSLog(@"TransformPlugin: No custom target format supplied.");
   }
 
   ConvertDataType dataType = UINT8;
   NSString* dataTypeString = arguments[@"dataType"];
   if (dataTypeString != nil) {
     dataType = parseDataType(dataTypeString);
-    NSLog(@"ResizePlugin: Using target data type: %@", dataTypeString);
+    NSLog(@"TransformPlugin: Using target data type: %@", dataTypeString);
   } else {
-    NSLog(@"ResizePlugin: No custom data type supplied.");
+    NSLog(@"TransformPlugin: No custom data type supplied.");
   }
 
   FrameBuffer* result = nil;
@@ -610,6 +610,6 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   return result.sharedArray;
 }
 
-VISION_EXPORT_FRAME_PROCESSOR(ResizePlugin, resize);
+VISION_EXPORT_FRAME_PROCESSOR(TransformPlugin, transform);
 
 @end

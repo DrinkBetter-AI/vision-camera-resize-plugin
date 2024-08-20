@@ -14,7 +14,7 @@ find_library(LOG_LIB log)
 add_subdirectory(../libyuv libyuv)
 
 add_library(${PACKAGE_NAME}            SHARED
-            src/main/cpp/ResizePlugin.cpp
+            src/main/cpp/TransformPlugin.cpp
             src/main/cpp/JImage.cpp
             src/main/cpp/JImagePlane.cpp
             src/main/cpp/VisionCameraTransformPlugin.cpp

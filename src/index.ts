@@ -14,13 +14,7 @@ interface Size {
 }
 
 interface Rect extends Size {
-  /**
-   * The origin X of the Frame used for cropping. If not set, a center-crop will be performed.
-   */
   x: number;
-  /**
-   * The origin Y of the Frame used for cropping. If not set, a center-crop will be performed.
-   */
   y: number;
 }
 

@@ -14,13 +14,13 @@ import com.mrousavy.camera.frameprocessors.VisionCameraProxy
 import java.nio.ByteBuffer
 
 @Suppress("KotlinJniMissingFunction") // We're using fbjni
-class ResizePlugin(private val proxy: VisionCameraProxy) : FrameProcessorPlugin() {
+class TransformPlugin(private val proxy: VisionCameraProxy) : FrameProcessorPlugin() {
   @DoNotStrip
   @Keep
   private val mHybridData: HybridData
 
   companion object {
-    private const val TAG = "ResizePlugin"
+    private const val TAG = "TransformPlugin"
 
     init {
       System.loadLibrary("VisionCameraTransformPlugin")
@@ -166,7 +166,7 @@ class ResizePlugin(private val proxy: VisionCameraProxy) : FrameProcessorPlugin(
   }
 
   private enum class PixelFormat {
-    // Integer-Values (ordinals) to be in sync with ResizePlugin.h
+    // Integer-Values (ordinals) to be in sync with TransformPlugin.h
     RGB,
     BGR,
     ARGB,
@@ -189,7 +189,7 @@ class ResizePlugin(private val proxy: VisionCameraProxy) : FrameProcessorPlugin(
   }
 
   private enum class DataType {
-    // Integer-Values (ordinals) to be in sync with ResizePlugin.h
+    // Integer-Values (ordinals) to be in sync with TransformPlugin.h
     UINT8,
     FLOAT32;
 

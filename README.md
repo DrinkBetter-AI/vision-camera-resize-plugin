@@ -16,7 +16,7 @@ A [VisionCamera](https://github.com/mrousavy/react-native-vision-camera) Frame P
 Use the `resize` plugin within a Frame Processor:
 
 ```tsx
-const { resize } = useResizePlugin();
+const { resize } = useTransformPlugin();
 
 const frameProcessor = useFrameProcessor((frame) => {
   'worklet';
@@ -41,7 +41,7 @@ const frameProcessor = useFrameProcessor((frame) => {
 Or outside of a function component:
 
 ```tsx
-const { resize } = createResizePlugin();
+const { resize } = createTransformPlugin();
 
 const frameProcessor = createFrameProcessor((frame) => {
   'worklet';
@@ -194,7 +194,7 @@ const objectDetection = useTensorflowModel(
 const model =
   objectDetection.state === 'loaded' ? objectDetection.model : undefined;
 
-const { resize } = useResizePlugin();
+const { resize } = useTransformPlugin();
 
 const frameProcessor = useFrameProcessor(
   (frame) => {

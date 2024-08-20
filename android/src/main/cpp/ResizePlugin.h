@@ -37,13 +37,13 @@ struct FrameBuffer {
   int bytesPerRow() const;
 };
 
-struct ResizePlugin : public HybridClass<ResizePlugin> {
+struct TransformPlugin : public HybridClass<TransformPlugin> {
 public:
-  static auto constexpr kJavaDescriptor = "Lcom/VisionCameraTransformPlugin/ResizePlugin;";
+  static auto constexpr kJavaDescriptor = "Lcom/VisionCameraTransformPlugin/TransformPlugin;";
   static void registerNatives();
 
 private:
-  explicit ResizePlugin(const alias_ref<jhybridobject>& javaThis);
+  explicit TransformPlugin(const alias_ref<jhybridobject>& javaThis);
 
   global_ref<JByteBuffer> resize(alias_ref<JImage> image, int cropX, int cropY, int cropWidth, int cropHeight, int scaleWidth,
                                  int scaleHeight, int /* Rotation */ rotation, bool mirror, int /* PixelFormat */ pixelFormat,
@@ -59,7 +59,7 @@ private:
   global_ref<JByteBuffer> allocateBuffer(size_t size, std::string debugName);
 
 private:
-  static auto constexpr TAG = "ResizePlugin";
+  static auto constexpr TAG = "TransformPlugin";
   friend HybridBase;
   global_ref<javaobject> _javaThis;
   // YUV (?x?) -> ARGB (?x?)

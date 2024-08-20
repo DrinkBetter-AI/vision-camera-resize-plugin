@@ -1315,10 +1315,10 @@ SPEC CHECKSUMS:
   ReactCommon: 45b5d4f784e869c44a6f5a8fad5b114ca8f78c53
   RNReanimated: ffa9614c45d3e088b60c78dedfc176fb37002dac
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  vision-camera-transform-plugin: 525763ad8f20ff9e58984ee4d5aceb50ec22ce4c
+  vision-camera-transform-plugin: 1ebe6f1062eca9b5d0bae84adca48d2d2fec7afb
   VisionCamera: 8e00df84a76cf26ca70ecd3b6ed05dc0d3b60beb
   Yoga: 13c8ef87792450193e117976337b8527b49e8c03
 
-PODFILE CHECKSUM: 16d369efc4af0146b63524f111284c80d034c812
+PODFILE CHECKSUM: cb4db52e185a9bc640048089eea2dbdca3bc343f
 
 COCOAPODS: 1.15.2
