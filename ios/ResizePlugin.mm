@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, Rotation) { Rotation0 = 0, Rotation90 = 90, Rotation1
   FrameBuffer* _argbBuffer;
   // 2. ARGB (?x?) -> ARGB (!x!)
   FrameBuffer* _resizeBuffer;
+  FrameBuffer* _resizeFitBuffer;
   FrameBuffer* _cropBuffer;
   FrameBuffer* _mirrorBuffer;
   FrameBuffer* _rotateBuffer;
@@ -308,7 +309,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   return _argbBuffer;
 }
 
-- (FrameBuffer*)resizeARGB:(FrameBuffer*)buffer targetSize:(CGSize)targetSize {
+- (FrameBuffer*)resizeARGBBuffer:(FrameBuffer*)buffer targetSize:(CGSize)targetSize {
   CGFloat targetWidth = targetSize.width;
   CGFloat targetHeight = targetSize.height;
 
@@ -350,6 +351,43 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   }
 
   return _resizeBuffer;
+}
+
+- (FrameBuffer*)resizeToFitARGBBuffer:(FrameBuffer*)buffer targetSize:(CGSize)targetSize {
+
+  CGFloat targetWidth = targetSize.width;
+  CGFloat targetHeight = targetSize.height;
+
+  NSLog(@"Resizing (with preserved aspect ratio) ARGB_8 Frame to %f x %f...", targetWidth, targetHeight);
+
+  if (_resizeFitBuffer == nil || _resizeFitBuffer.width != targetWidth || _resizeFitBuffer.height != targetHeight) {
+    _resizeFitBuffer = [[FrameBuffer alloc] initWithWidth:targetWidth height:targetHeight pixelFormat:ARGB dataType:UINT8 proxy:_proxy];
+  }
+
+  const vImage_Buffer* source = buffer.imageBuffer;
+  const vImage_Buffer* destination = _resizeFitBuffer.imageBuffer;
+
+  // Transform and pad
+  CGFloat scaleFactor = MIN(scale.width / buffer.width, scale.height / buffer.height);
+  CGAffineTransform cgTransform = CGAffineTransformIdentity;
+  cgTransform = CGAffineTransformScale(cgTransform, scaleFactor, scaleFactor);
+  vImage_AffineTransform vTransform = vImage_AffineTransform();
+  vTransform.a = cgTransform.a;
+  vTransform.b = cgTransform.b;
+  vTransform.c = cgTransform.c;
+  vTransform.d = cgTransform.d;
+  vTransform.tx = cgTransform.tx;
+  vTransform.ty = cgTransform.ty;
+  const Pixel_8888 backgroundColor = {255, 0, 0, 0};
+  vImage_Error error = vImageAffineWarp_ARGB8888(source, destination, nil, &vTransform, backgroundColor, kvImageBackgroundColorFill);
+  if (error != kvImageNoError) {
+    [[unlikely]];
+    @throw [NSException exceptionWithName:@"Resize Error"
+                                    reason:[NSString stringWithFormat:@"Failed to resize ARGB buffer! Error: %zu", error]
+                                  userInfo:nil];
+  }
+
+  return _resizeFitBuffer
 }
 
 - (FrameBuffer*)cropARGBBuffer:(FrameBuffer*)buffer rect:(CGRect)rect {
@@ -583,14 +621,19 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
     switch (transform) {
       case Resize: {
         NSDictionary* targetSizeDict = transformOperation[@"targetSize"];
+        NSNumber* preserveAspectRatioParam = transformOperation[@"preserveAspectRatio"];
+        BOOL preserveAspectRatio = NO;
+        if (preserveAspectRatioParam != nil) {
+          preserveAspectRatio = [preserveAspectRatioParam boolValue];
+        }
         if (targetSizeDict == nil) {
           NSLog(@"ResizePlugin: Resize Transform missing required options - skipping...");
           continue;
         }
         double targetWidth = ((NSNumber*)targetSizeDict[@"width"]).doubleValue;
         double targetHeight = ((NSNumber*)targetSizeDict[@"height"]).doubleValue;
-        NSLog(@"ResizePlugin: Resize target size: %fx%f", targetWidth, targetHeight);
-        result = [self resizeARGB:result targetSize:CGSizeMake(targetWidth, targetHeight)];
+        NSLog(@"ResizePlugin: Resize target size: %fx%f (preserve aspect ratio: %@)", targetWidth, targetHeight, preserveAspectRatio ? @"YES" : @"NO");
+        result = [self resizeARGBBuffer:result targetSize:CGSizeMake(targetWidth, targetHeight)];
         break;
       }
       case Crop: {

@@ -18,26 +18,6 @@ interface Rect extends Size {
   y: number;
 }
 
-// /**
-//    * If set to `true`, the image will be mirrored horizontally.
-//    */
-// mirror?: boolean;
-// /**
-//  * Crops the image to the given target rect. This is applied first before scaling.
-//  *
-//  * If this is not set, a center-crop to the given target aspect ratio is automatically calculated.
-//  */
-// crop?: Rect;
-// /**
-//  * Scale the image to the given target size. This is applied after cropping.
-//  */
-// scale?: Size;
-// /**
-//  * Rotate the image by a given amount of degrees, clockwise.
-//  * @default '0deg'
-//  */
-// rotation?: '0deg' | '90deg' | '180deg' | '270deg';
-
 export type ResizeTransform = {
   /**
    * A transform that changes the dimensions of the Frame Buffer
