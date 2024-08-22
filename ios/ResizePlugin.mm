@@ -17,7 +17,7 @@
 
 #import "FrameBuffer.h"
 
-typedef NS_ENUM(NSInteger, Transform) { Resize, Crop, Mirror, Rotate };
+typedef NS_ENUM(NSInteger, Transform) { Resize, ResizeToFit, Crop, Mirror, Rotate };
 typedef NS_ENUM(NSInteger, Rotation) { Rotation0 = 0, Rotation90 = 90, Rotation180 = 180, Rotation270 = 270 };
 
 @interface ResizePlugin : FrameProcessorPlugin
@@ -59,6 +59,8 @@ typedef NS_ENUM(NSInteger, Rotation) { Rotation0 = 0, Rotation90 = 90, Rotation1
 Transform parseTransform(NSString* transformString) {
   if ([transformString isEqualToString:@"resize"]) {
     return Resize;
+  } else if ([transformString isEqualToString:@"resize-to-fit"]) {
+    return ResizeToFit;
   } else if ([transformString isEqualToString:@"crop"]) {
     return Crop;
   } else if ([transformString isEqualToString:@"mirror"]) {
@@ -368,7 +370,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   const vImage_Buffer* destination = _resizeFitBuffer.imageBuffer;
 
   // Transform and pad
-  CGFloat scaleFactor = MIN(scale.width / buffer.width, scale.height / buffer.height);
+  CGFloat scaleFactor = MIN(targetWidth / buffer.width, targetHeight / buffer.height);
   CGAffineTransform cgTransform = CGAffineTransformIdentity;
   cgTransform = CGAffineTransformScale(cgTransform, scaleFactor, scaleFactor);
   vImage_AffineTransform vTransform = vImage_AffineTransform();
@@ -387,7 +389,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
                                   userInfo:nil];
   }
 
-  return _resizeFitBuffer
+  return _resizeFitBuffer;
 }
 
 - (FrameBuffer*)cropARGBBuffer:(FrameBuffer*)buffer rect:(CGRect)rect {
@@ -621,19 +623,26 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
     switch (transform) {
       case Resize: {
         NSDictionary* targetSizeDict = transformOperation[@"targetSize"];
-        NSNumber* preserveAspectRatioParam = transformOperation[@"preserveAspectRatio"];
-        BOOL preserveAspectRatio = NO;
-        if (preserveAspectRatioParam != nil) {
-          preserveAspectRatio = [preserveAspectRatioParam boolValue];
-        }
         if (targetSizeDict == nil) {
           NSLog(@"ResizePlugin: Resize Transform missing required options - skipping...");
           continue;
         }
         double targetWidth = ((NSNumber*)targetSizeDict[@"width"]).doubleValue;
         double targetHeight = ((NSNumber*)targetSizeDict[@"height"]).doubleValue;
-        NSLog(@"ResizePlugin: Resize target size: %fx%f (preserve aspect ratio: %@)", targetWidth, targetHeight, preserveAspectRatio ? @"YES" : @"NO");
+        NSLog(@"ResizePlugin: Resize target size: %fx%f", targetWidth, targetHeight);
         result = [self resizeARGBBuffer:result targetSize:CGSizeMake(targetWidth, targetHeight)];
+        break;
+      }
+      case ResizeToFit: {
+        NSDictionary* targetSizeDict = transformOperation[@"targetSize"];
+        if (targetSizeDict == nil) {
+          NSLog(@"ResizePlugin: Resize Transform missing required options - skipping...");
+          continue;
+        }
+        double targetWidth = ((NSNumber*)targetSizeDict[@"width"]).doubleValue;
+        double targetHeight = ((NSNumber*)targetSizeDict[@"height"]).doubleValue;
+        NSLog(@"ResizePlugin: Resize target size: %fx%f (preserved aspect ratio)", targetWidth, targetHeight);
+        result = [self resizeToFitARGBBuffer:result targetSize:CGSizeMake(targetWidth, targetHeight)];
         break;
       }
       case Crop: {

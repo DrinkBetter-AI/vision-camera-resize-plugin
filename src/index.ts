@@ -28,6 +28,17 @@ export type ResizeTransform = {
    */
   targetSize: Size;
 };
+export type ResizeToFitTransform = {
+  /**
+   * A transform that changes the dimensions of the Frame Buffer whilist preserving the aspect
+   * ratio of the input and padding the empty space with zeros
+   */
+  type: 'resize-to-fit';
+  /**
+   * The size of the target the image will be resized to fit within
+   */
+  targetSize: Size;
+};
 export type MirrorTransform = {
   /**
    * A transform that mirrors the Frame Buffer horizontally
@@ -56,6 +67,7 @@ export type RotationTransform = {
 };
 export type Transform =
   | ResizeTransform
+  | ResizeToFitTransform
   | MirrorTransform
   | CropTransform
   | RotationTransform;

@@ -58,12 +58,16 @@ export default function App() {
 
       const result = transform(frame, {
         transforms: [
+          // {
+          //   type: 'crop',
+          //   rect: { x: 440, y: 860, width: 200, height: 200 },
+          // },
+          // { type: 'rotate', rotation: '90deg' },
+          // { type: 'resize', targetSize: { width: WIDTH, height: HEIGHT } },
           {
-            type: 'crop',
-            rect: { x: 440, y: 860, width: 200, height: 200 },
+            type: 'resize-to-fit',
+            targetSize: { width: WIDTH, height: HEIGHT },
           },
-          { type: 'rotate', rotation: '90deg' },
-          { type: 'resize', targetSize: { width: WIDTH, height: HEIGHT } },
         ],
         dataType: TARGET_TYPE,
         pixelFormat: TARGET_FORMAT,
