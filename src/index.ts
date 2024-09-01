@@ -38,6 +38,11 @@ export type ResizeToFitTransform = {
    * The size of the target the image will be resized to fit within
    */
   targetSize: Size;
+  /**
+   * Optionally translate the resized frame to the center of the target rather than
+   * keeping it positioned at the origin
+   */
+  centered?: boolean;
 };
 export type MirrorTransform = {
   /**
@@ -89,7 +94,7 @@ export interface Options<T extends DataType> {
    * - `'rgba'`: [R, G, B, A]
    * - `'argb'`: [A, R, G, B]
    * - `'bgra'`: [B, G, R, A]
-   * - `'bgr'`: [B, G, R]
+   * - `'bgr'`: [B, G, R]cd
    * - `'abgr'`: [A, B, G, R]
    */
   pixelFormat: 'rgb' | 'rgba' | 'argb' | 'bgra' | 'bgr' | 'abgr';

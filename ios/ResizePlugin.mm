@@ -355,7 +355,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   return _resizeBuffer;
 }
 
-- (FrameBuffer*)resizeToFitARGBBuffer:(FrameBuffer*)buffer targetSize:(CGSize)targetSize {
+- (FrameBuffer*)resizeToFitARGBBuffer:(FrameBuffer*)buffer targetSize:(CGSize)targetSize centered:(bool)centered {
 
   CGFloat targetWidth = targetSize.width;
   CGFloat targetHeight = targetSize.height;
@@ -370,9 +370,17 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   const vImage_Buffer* destination = _resizeFitBuffer.imageBuffer;
 
   // Transform and pad
-  CGFloat scaleFactor = MIN(targetWidth / buffer.width, targetHeight / buffer.height);
+  CGFloat widthRatio = targetWidth / buffer.width;
+  CGFloat heightRatio = targetHeight / buffer.height;
+  CGFloat scaleFactor = MIN(widthRatio, heightRatio);
+  bool isHorizontalPad = widthRatio > heightRatio;
   CGAffineTransform cgTransform = CGAffineTransformIdentity;
   cgTransform = CGAffineTransformScale(cgTransform, scaleFactor, scaleFactor);
+  if (centered) {
+    CGFloat translateX = isHorizontalPad ? (targetWidth - (buffer.width * scaleFactor)) / 2 : 0;
+    CGFloat translateY = isHorizontalPad ? 0 : (targetHeight - (buffer.height * scaleFactor)) / 2;
+    cgTransform = CGAffineTransformTranslate(cgTransform, translateX, translateY);
+  }
   vImage_AffineTransform vTransform = vImage_AffineTransform();
   vTransform.a = cgTransform.a;
   vTransform.b = cgTransform.b;
@@ -639,10 +647,14 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
           NSLog(@"ResizePlugin: Resize Transform missing required options - skipping...");
           continue;
         }
+        bool centered = false;
+        if (transformOperation[@"centered"] != nil) {
+          centered = [transformOperation[@"centered"] boolValue];
+        }
         double targetWidth = ((NSNumber*)targetSizeDict[@"width"]).doubleValue;
         double targetHeight = ((NSNumber*)targetSizeDict[@"height"]).doubleValue;
         NSLog(@"ResizePlugin: Resize target size: %fx%f (preserved aspect ratio)", targetWidth, targetHeight);
-        result = [self resizeToFitARGBBuffer:result targetSize:CGSizeMake(targetWidth, targetHeight)];
+        result = [self resizeToFitARGBBuffer:result targetSize:CGSizeMake(targetWidth, targetHeight) centered:centered];
         break;
       }
       case Crop: {
