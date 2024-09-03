@@ -67,6 +67,7 @@ export default function App() {
           {
             type: 'resize-to-fit',
             targetSize: { width: WIDTH, height: HEIGHT },
+            centered: true,
           },
         ],
         dataType: TARGET_TYPE,

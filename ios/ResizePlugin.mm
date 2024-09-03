@@ -374,13 +374,14 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
   CGFloat heightRatio = targetHeight / buffer.height;
   CGFloat scaleFactor = MIN(widthRatio, heightRatio);
   bool isHorizontalPad = widthRatio > heightRatio;
-  CGAffineTransform cgTransform = CGAffineTransformIdentity;
-  cgTransform = CGAffineTransformScale(cgTransform, scaleFactor, scaleFactor);
+  CGAffineTransform scaleTransform = CGAffineTransformScale(CGAffineTransformIdentity, scaleFactor, scaleFactor);
+  CGAffineTransform translationTransform = CGAffineTransformIdentity;
   if (centered) {
     CGFloat translateX = isHorizontalPad ? (targetWidth - (buffer.width * scaleFactor)) / 2 : 0;
     CGFloat translateY = isHorizontalPad ? 0 : (targetHeight - (buffer.height * scaleFactor)) / 2;
-    cgTransform = CGAffineTransformTranslate(cgTransform, translateX, translateY);
+    translationTransform = CGAffineTransformTranslate(CGAffineTransformIdentity, translateX, translateY);
   }
+  CGAffineTransform cgTransform = CGAffineTransformConcat(scaleTransform, translationTransform);
   vImage_AffineTransform vTransform = vImage_AffineTransform();
   vTransform.a = cgTransform.a;
   vTransform.b = cgTransform.b;
@@ -651,6 +652,7 @@ vImage_YpCbCrPixelRange getRange(FourCharCode pixelFormat) {
         if (transformOperation[@"centered"] != nil) {
           centered = [transformOperation[@"centered"] boolValue];
         }
+        NSLog(@"Centered => %@", centered ? @"YES" : @"NO");
         double targetWidth = ((NSNumber*)targetSizeDict[@"width"]).doubleValue;
         double targetHeight = ((NSNumber*)targetSizeDict[@"height"]).doubleValue;
         NSLog(@"ResizePlugin: Resize target size: %fx%f (preserved aspect ratio)", targetWidth, targetHeight);
