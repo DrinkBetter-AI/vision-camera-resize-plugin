@@ -6,7 +6,7 @@ import {
   useCameraPermission,
   useFrameProcessor,
 } from 'react-native-vision-camera';
-import { Options, useTransformPlugin } from 'vision-camera-resize-plugin';
+import { Options, useTransformPlugin } from '../../src/index';
 import { useSharedValue } from 'react-native-reanimated';
 import {
   Skia,
@@ -62,7 +62,7 @@ export default function App() {
           //   type: 'crop',
           //   rect: { x: 440, y: 860, width: 200, height: 200 },
           // },
-          // { type: 'rotate', rotation: '90deg' },
+          { type: 'rotate', rotation: '90deg' },
           // { type: 'resize', targetSize: { width: WIDTH, height: HEIGHT } },
           {
             type: 'resize-to-fit',
@@ -79,7 +79,7 @@ export default function App() {
       const end = performance.now();
 
       console.log(
-        `Resized ${frame.width}x${frame.height} into ${WIDTH}x${HEIGHT} frame (${
+        `Resized ${frame.width}x${frame.height} orientation = ${frame.orientation} into ${WIDTH}x${HEIGHT} frame (${
           result.length
         }) in ${(end - start).toFixed(2)}ms`
       );
@@ -95,7 +95,7 @@ export default function App() {
           enableFpsGraph
           style={StyleSheet.absoluteFill}
           isActive={true}
-          pixelFormat="yuv"
+          pixelFormat="rgb"
           frameProcessor={frameProcessor}
         />
       )}

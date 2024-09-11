@@ -28,6 +28,8 @@ ResizePlugin::ResizePlugin(const jni::alias_ref<jhybridobject>& javaThis) {
 Transform parseTransform(std::string transformString) {
     if (transformString == "resize") {
         return Resize;
+    } else if (transformString == "resize-to-fit") {
+        return ResizeToFit;
     } else if (transformString == "crop") {
         return Crop;
     } else if (transformString == "mirror") {
@@ -454,6 +456,20 @@ jni::global_ref<jni::JByteBuffer> ResizePlugin::transform(jni::alias_ref<JImage>
               }
               auto targetWidth = targetSizeDict.value()->getDoubleValue("width");
               auto targetHeight = targetSizeDict.value()->getDoubleValue("height");
+              result = scaleARGBBuffer(result, targetWidth, targetHeight);
+              break;
+          }
+          case ResizeToFit: {
+              auto targetSizeDict = transformOperation->getMapValue("targetSize");
+              if (!targetSizeDict.has_value()) {
+                  __android_log_print(ANDROID_LOG_INFO, TAG,
+                                      "Resize Transform missing required options - skipping...");
+                  continue;
+              }
+              auto targetWidth = targetSizeDict.value()->getDoubleValue("width");
+              auto targetHeight = targetSizeDict.value()->getDoubleValue("height");
+              // TODO: Apply the centering via some affine transform similar to what vImage gives us on iOS...
+              auto centered = transformOperation->getBoolValue("centered");
               result = scaleARGBBuffer(result, targetWidth, targetHeight);
               break;
           }

@@ -18,7 +18,7 @@ namespace vision {
 using namespace facebook;
 using namespace jni;
 
-enum Transform {Resize, Crop, Mirror, Rotate};
+enum Transform {Resize, ResizeToFit, Crop, Mirror, Rotate};
 
 enum PixelFormat { RGB, BGR, ARGB, RGBA, BGRA, ABGR };
 

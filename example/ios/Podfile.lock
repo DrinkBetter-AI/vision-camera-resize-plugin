@@ -1074,16 +1074,16 @@ PODS:
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
     - VisionCamera
-  - VisionCamera (4.0.1):
-    - VisionCamera/Core (= 4.0.1)
-    - VisionCamera/FrameProcessors (= 4.0.1)
-    - VisionCamera/React (= 4.0.1)
-  - VisionCamera/Core (4.0.1)
-  - VisionCamera/FrameProcessors (4.0.1):
+  - VisionCamera (4.5.2):
+    - VisionCamera/Core (= 4.5.2)
+    - VisionCamera/FrameProcessors (= 4.5.2)
+    - VisionCamera/React (= 4.5.2)
+  - VisionCamera/Core (4.5.2)
+  - VisionCamera/FrameProcessors (4.5.2):
     - React
     - React-callinvoker
     - react-native-worklets-core
-  - VisionCamera/React (4.0.1):
+  - VisionCamera/React (4.5.2):
     - React-Core
     - VisionCamera/FrameProcessors
   - Yoga (1.14.0)
@@ -1316,9 +1316,9 @@ SPEC CHECKSUMS:
   RNReanimated: ffa9614c45d3e088b60c78dedfc176fb37002dac
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   vision-camera-resize-plugin: 525763ad8f20ff9e58984ee4d5aceb50ec22ce4c
-  VisionCamera: 8e00df84a76cf26ca70ecd3b6ed05dc0d3b60beb
-  Yoga: e64aa65de36c0832d04e8c7bd614396c77a80047
+  VisionCamera: 057aff621f7801b7d99a00d157fa39244bbd4fd2
+  Yoga: 13c8ef87792450193e117976337b8527b49e8c03
 
 PODFILE CHECKSUM: 16d369efc4af0146b63524f111284c80d034c812
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
